@@ -1,4 +1,5 @@
-@extends('admin.layouts.app')
+Hola
+{{-- @extends('admin.layouts.app')
 
 @section('title', 'Fórum')
 
@@ -12,5 +13,4 @@
 <x-pagination
     :paginator="$supports"
     :appends="$filters" />
-
-@endsection
+@endsection --}}

@@ -16,18 +16,23 @@ class SupportController extends Controller
         protected SupportService $service
     ) {}
 
-    public function index(Request $request)
+    public function index()
     {
-        $supports = $this->service->paginate(
-            page: $request->get('page', 1),
-            totalPerPage: $request->get('per_page', 6),
-            filter: $request->filter,
-        );
-
-        $filters = ['filter' => $request->get('filter', '')];
-
-        return view('admin/supports/index', compact('supports', 'filters'));
+        return view('admin/supports/index');
     }
+
+    // public function index(Request $request)
+    // {
+    //     $supports = $this->service->paginate(
+    //         page: $request->get('page', 1),
+    //         totalPerPage: $request->get('per_page', 6),
+    //         filter: $request->filter,
+    //     );
+
+    //     $filters = ['filter' => $request->get('filter', '')];
+
+    //     return view('admin/supports/index', compact('supports', 'filters'));
+    // }
 
     public function show(string $id)
     {
