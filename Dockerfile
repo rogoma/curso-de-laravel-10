@@ -20,8 +20,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install PHP extensions MYSQL
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 
-# Install PHP extensions PGSQL
-RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
+# # Install PHP extensions PGSQL
+# RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
