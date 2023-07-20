@@ -25,20 +25,20 @@ class Support extends Model
     //     'status' => SupportStatus::class,
     // ];
 
-    public function status(): Attribute
-    {
-        return Attribute::make(
-            set: fn (SupportStatus $status) => $status->name,
-        );
-    }
+    // public function status(): Attribute
+    // {
+    //     return Attribute::make(
+    //         set: fn (SupportStatus $status) => $status->name,
+    //     );
+    // }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
-    public function replies(): HasMany
-    {
-        return $this->hasMany(ReplySupport::class);
-    }
+    // public function replies(): HasMany
+    // {
+    //     return $this->hasMany(ReplySupport::class);
+    // }
 }

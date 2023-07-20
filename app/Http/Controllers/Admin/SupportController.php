@@ -21,29 +21,40 @@ class SupportController extends Controller
     //     return view('admin/supports/index');
     // }
 
-    public function index(Request $request)
+    public function index(Request $request, Support $support)
     {
-        $supports = $this->service->paginate(
-            page: $request->get('page', 1),
-            totalPerPage: $request->get('per_page', 6),
-            filter: $request->filter,
-        );
+        $supports = $support->all();
+        return view('admin/supports/index', compact('supports'));
 
-        $filters = ['filter' => $request->get('filter', '')];
+        // $supports = $this->service->paginate(
+        //     page: $request->get('page', 1),
+        //     totalPerPage: $request->get('per_page', 6),
+        //     filter: $request->filter,
+        // );
 
-        return view('admin/supports/index', compact('supports', 'filters'));
+        // $filters = ['filter' => $request->get('filter', '')];
+
+        // return view('admin/supports/index', compact('supports', 'filters'));
     }
 
-    public function show(string $id)
+    public function show(string|int $id)
     {
+
+        // dd($id);
+        if (!$support = Support::find($id)){
+            return back();
+        }
+        // dd($support->subject);
+        return view('admin/supports/show', compact('support'));
+
         // Support::find($id)
         // Support::where('id', $id)->first();
         // Support::where('id', '!=', $id)->first();
-        if (!$support = $this->service->findOne($id)) {
-            return back();
-        }
+        // if (!$support = $this->service->findOne($id)) {
+        //     return back();
+        // }
 
-        return view('admin/supports/show', compact('support'));
+        // return view('admin/supports/show', compact('support'));
     }
 
     public function create()
@@ -51,23 +62,42 @@ class SupportController extends Controller
         return view('admin/supports/create');
     }
 
-    public function store(StoreUpdateSupport $request, Support $support)
+    public function store(Request $request, Support $support)
     {
-        $this->service->new(
-            CreateSupportDTO::makeFromRequest($request)
-        );
+        $data = $request->all();
+        $data ['status'] = 'a';
+        $support = $support->create($data);
 
-        return redirect()
-                ->route('supports.index')
-                ->with('message', 'Cadastrado com sucesso!');
+        return redirect()->route('supports.index');
+        // dd($support);
+
+
+        // dd($request->all());
+        // dd($request->only(['subject', 'body']));
+        //dd($request->body);
     }
 
-    public function edit(string $id)
+
+    // public function store(StoreUpdateSupport $request, Support $support)
+    // {
+    //     $this->service->new(
+    //         CreateSupportDTO::makeFromRequest($request)
+    //     );
+
+    //     return redirect()
+    //             ->route('supports.index')
+    //             ->with('message', 'Cadastrado com sucesso!');
+    // }
+
+    public function edit(string $id, Support $support)
     {
-        // if (!$support = $support->where('id', $id)->first()) {
-        if (!$support = $this->service->findOne($id)) {
-            return back();
+        if (!$support = $support->where('id', $id)->first()) {
+              return back();
         }
+
+        // if (!$support = $this->service->findOne($id)) {
+        //     return back();
+        // }
 
         return view('admin/supports.edit', compact('support'));
     }

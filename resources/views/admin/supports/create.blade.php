@@ -1,4 +1,17 @@
-@extends('admin.layouts.app')
+<h1>Nueva entrada</h1>
+
+<form action="{{ route('supports.store') }}" method="POST">
+    {{-- <input type="hidden" value="{{ csrf_token() }}" name="_token"> --}}
+    @csrf
+    <input type="text" placeholder="Asunto" name="subject">
+    <textarea name="body" cols="30" rows="5" placeholder="Descripción"></textarea>
+    <button type="submit">Enviar</button>
+</form>
+
+
+
+
+{{-- @extends('admin.layouts.app')
 
 @section('title', 'Criar Novo Tópico')
 
@@ -10,4 +23,4 @@
 <form action="{{ route('supports.store') }}" method="POST">
     @include('admin.supports.partials.form')
 </form>
-@endsection
+@endsection --}}
