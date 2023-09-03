@@ -1,68 +1,148 @@
 version: "3.7"
 
 services:
-    # image project
     app:
+        image: "laratest/app:${TAG:-latest}"
         build:
-            context: .
+            args:
+                user: testusr
+                uid: 1000
+            context: ./
             dockerfile: Dockerfile
+        container_name: curso-de-laravel-10-app
         restart: unless-stopped
         working_dir: /var/www/
         volumes:
             - ./:/var/www
-        depends_on:
-            - redis
         networks:
-            - laravel
+            - test-network
 
-    # nginx
-    nginx:
-        image: nginx:alpine
+    web:
+        image: nginx:1.19.4
+        container_name: curso-de-laravel-10-nginx
         restart: unless-stopped
         ports:
-            - "8989:80"
+            - "8000:80"
         volumes:
-            - ./:/var/www
-            - ./docker/nginx/:/etc/nginx/conf.d/
+            - ./:/var/www            
+            # - ./docker-compose/nginx:/etc/nginx/conf.d/  (original)
+            - ./docker/nginx/:/etc/nginx/conf.d/            
         networks:
-            - laravel
+            - test-network
 
-    # db mysql
-    db:
-        image: mysql:5.7.22
-        platform: linux/x86_64
+
+    pgsql:
+        image: postgres:12.4
+        container_name: curso-de-laravel-10-pgsql12
         restart: unless-stopped
+        # expose:
+        #     - 5432
+        ports:
+            - "6433:5432"
+        volumes:
+            - dbpgsql:/docker-entrypoint-initdb.d/
         environment:
-            MYSQL_DATABASE: ${DB_DATABASE:-laravel}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
-            MYSQL_PASSWORD: ${DB_PASSWORD:-userpass}
-            MYSQL_USER: ${DB_USERNAME:-username}
-        volumes:
-            - ./.docker/mysql/dbdata:/var/lib/mysql
+            POSTGRES_USER: ${DB_USERNAME:-postgres}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+            POSTGRES_DB: ${DB_DATABASE:-curso-de-laravel-10}
+        networks:
+            - test-network
+
+    adminer:
+        image: adminer
+        restart: always
         ports:
-            - "3388:3306"
+            - ${ADMINER_PORT_DB:-8080}:8080
+        environment:
+            - ADMINER_DEFAULT-SERVER=pgsql
+            - ADMINER_DESIGN=price
         networks:
-            - laravel
+            - test-network
 
-    # queue
-    queue:
-        image: especializati/laravel9-app
-        restart: unless-stopped
-        command: "php artisan queue:work"
-        volumes:
-            - ./:/var/www
-        depends_on:
-            - redis
-            - app
+    mailhog:
+        image: mailhog/mailhog
+        logging:
+            driver: "none"
+        ports:
+            - ${MAIL_PORT:-1025}:1025
+            - ${MAILHOG_PORT:-8025}:8025
         networks:
-            - laravel
-
-    # redis
-    redis:
-        image: redis:latest
-        networks:
-            - laravel
+            - test-network
 
 networks:
-    laravel:
+    test-network:
         driver: bridge
+
+volumes:
+    dbpgsql:
+
+# version: "3.7"
+
+# services:
+#     # image project
+#     app:
+#         build:
+#             context: .
+#             dockerfile: Dockerfile
+#         restart: unless-stopped
+#         working_dir: /var/www/
+#         volumes:
+#             - ./:/var/www
+#         depends_on:
+#             - redis
+#         networks:
+#             - laravel
+
+#     # nginx
+#     nginx:
+#         image: nginx:alpine
+#         restart: unless-stopped
+#         ports:
+#             - "8989:80"
+#         volumes:
+#             - ./:/var/www
+#             - ./docker/nginx/:/etc/nginx/conf.d/
+#         networks:
+#             - laravel
+#     pgsql:
+#         image: postgres:12.4
+#         container_name: curso-de-laravel-10-pgsql12
+#         restart: unless-stopped
+#             # expose:
+#             #     - 5432
+#         ports:
+#             - "6433:5432"
+#         volumes:
+#             - dbpgsql:/docker-entrypoint-initdb.d/
+#         environment:
+#             POSTGRES_USER: ${DB_USERNAME:-postgres}
+#             POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+#             POSTGRES_DB: ${DB_DATABASE:-curso-de-laravel-10}
+#         networks:
+#             - laravel
+
+#     # queue
+#     queue:
+#         image: especializati/laravel9-app
+#         restart: unless-stopped
+#         command: "php artisan queue:work"
+#         volumes:
+#             - ./:/var/www
+#         depends_on:
+#             - redis
+#             - app
+#         networks:
+#             - laravel
+
+#     # redis
+#     redis:
+#         image: redis:latest
+#         networks:
+#             - laravel
+
+# networks:
+#     laravel:
+#         driver: bridge
+
+# volumes:
+#     dbpgsql:
