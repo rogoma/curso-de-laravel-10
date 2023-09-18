@@ -16,16 +16,17 @@ class SupportController extends Controller
         protected SupportService $service
     ) {}
 
-    // public function index()
-    // {
-    //     return view('admin/supports/index');
-    // }
-
-    public function index(Request $request, Support $support)
+    public function index(Support $support)
     {
         $supports = $support->all();
+        dd($supports);
         return view('admin/supports/index', compact('supports'));
+    }
 
+    // public function index(Request $request, Support $support)    
+    // {
+        // $supports = $support->all();
+        // return view('admin/supports/index', compact('supports'));
         // $supports = $this->service->paginate(
         //     page: $request->get('page', 1),
         //     totalPerPage: $request->get('per_page', 6),
@@ -35,17 +36,17 @@ class SupportController extends Controller
         // $filters = ['filter' => $request->get('filter', '')];
 
         // return view('admin/supports/index', compact('supports', 'filters'));
-    }
+    // }
 
     public function show(string|int $id)
     {
 
         // dd($id);
-        if (!$support = Support::find($id)){
-            return back();
-        }
-        // dd($support->subject);
-        return view('admin/supports/show', compact('support'));
+        // if (!$support = Support::find($id)){
+        //     return back();
+        // }
+        // // dd($support->subject);
+        // return view('admin/supports/show', compact('support'));
 
         // Support::find($id)
         // Support::where('id', $id)->first();
@@ -59,70 +60,52 @@ class SupportController extends Controller
 
     public function create()
     {
-        return view('admin/supports/create');
+        // return view('admin/supports/create');
     }
 
     public function store(Request $request, Support $support)
     {
-        $data = $request->all();
-        $data ['status'] = 'a';
-        $support = $support->create($data);
+        // $data = $request->all();
+        // $data ['status'] = 'a';
+        // $support = $support->create($data);
 
-        return redirect()->route('supports.index');
-        // dd($support);
-
-
-        // dd($request->all());
-        // dd($request->only(['subject', 'body']));
-        //dd($request->body);
+        // return redirect()->route('supports.index');
+        
     }
 
 
-    // public function store(StoreUpdateSupport $request, Support $support)
-    // {
-    //     $this->service->new(
-    //         CreateSupportDTO::makeFromRequest($request)
-    //     );
-
-    //     return redirect()
-    //             ->route('supports.index')
-    //             ->with('message', 'Cadastrado com sucesso!');
-    // }
+    
 
     public function edit(string $id, Support $support)
     {
-        if (!$support = $support->where('id', $id)->first()) {
-              return back();
-        }
+        // if (!$support = $support->where('id', $id)->first()) {
+        //       return back();
+        // }      
 
-        // if (!$support = $this->service->findOne($id)) {
-        //     return back();
-        // }
-
-        return view('admin/supports.edit', compact('support'));
+        // return view('admin/supports.edit', compact('support'));
     }
 
     public function update(StoreUpdateSupport $request, Support $support, string $id)
     {
-        $support = $this->service->update(
-            UpdateSupportDTO::makeFromRequest($request),
-        );
+        // $support = $this->service->update(
+        //     UpdateSupportDTO::makeFromRequest($request),
+        // );
 
-        if (!$support) {
-            return back();
-        }
+        // if (!$support) {
+        //     return back();
+        // }
 
-        return redirect()
-                ->route('supports.index')
-                ->with('message', 'Atualizado com sucesso!');
+        // return redirect()
+        //         ->route('supports.index')
+        //         ->with('message', 'Atualizado com sucesso!');
     }
 
     public function destroy(string $id)
     {
-        $this->service->delete($id);
+        // $this->service->delete($id);
 
-        return redirect()
-                ->route('supports.index')
-                ->with('message', 'Deletado com sucesso!');
+        // return redirect()
+        //         ->route('supports.index')
+        //         ->with('message', 'Deletado com sucesso!');
     }
 }

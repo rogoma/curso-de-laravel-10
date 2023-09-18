@@ -1,6 +1,6 @@
 <h1>Listado de Soportes</h1>
 
-<a href="{{route('supports.create') }}">Nueva tarea</a>
+{{-- <a href="{{route('supports.create') }}">Nueva tarea</a>
 
 <table>
     <thead>
@@ -23,7 +23,7 @@
     </tbody>
 </table>
 
-{{-- @extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Fórum')
 
